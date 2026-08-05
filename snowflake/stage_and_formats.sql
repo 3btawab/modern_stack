@@ -11,7 +11,7 @@ CREATE OR REPLACE FILE FORMAT TALABAT.RAW.CSV_FMT
 
 CREATE OR REPLACE STAGE TALABAT.RAW.TALABAT_STAGE
   STORAGE_INTEGRATION = TALABAT_BLOB_INT
-  URL = 'azure://rawstoragfse.blob.core.windows.net/rawcontainer/'
+  URL = '**********************************************'
   FILE_FORMAT = TALABAT.RAW.CSV_FMT;
 
 LIST @TALABAT.RAW.TALABAT_STAGE

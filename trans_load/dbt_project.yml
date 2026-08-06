@@ -1,0 +1,24 @@
+name: 'trans_load'
+version: '1.0.0'
+
+profile: 'trans_load'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  trans_load:
+    staging: {+materialized: view, +schema: staging}
+    marts: {+materialized: table, +schema: marts}
+
+snapshots:
+  trans_load:
+    +target_schema: snapshot

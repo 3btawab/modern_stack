@@ -1,6 +1,0 @@
-{
-  "yaml.schemas": {
-    "https://raw.githubusercontent.com/dbt-labs/dbt-core/main/schemas/dbt_project.json": "dbt_project.yml"
-  },
-  "python-envs.defaultEnvManager": "ms-python.python:system"
-}

@@ -1,3 +1,15 @@
+# Virtual Environment
+.venv/
+
+# IDE Settings
+.vscode/
+
+# Logs & Target files
+logs/
+**/logs/
+**/target/
+**/dbt_packages/
+
 # Python-generated files
 __pycache__/
 *.py[oc]
@@ -6,9 +18,5 @@ dist/
 wheels/
 *.egg-info
 
-# Virtual environments
-.venv
-target/
-dbt_packages/
-logs/
+# Environment
 .env

@@ -1,1 +1,0 @@
-chore(dbt_my/.gitignore): add .gitignore for dbt project to exclude local artifacts and temp files

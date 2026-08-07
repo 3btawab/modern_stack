@@ -1,1 +1,0 @@
-test(dbt_my/tests): add tests directory for schema/data tests and test utilities

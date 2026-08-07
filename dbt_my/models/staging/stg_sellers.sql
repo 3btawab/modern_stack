@@ -4,10 +4,10 @@ with source as (
 
 renamed as (
     select
-        seller_id::varchar                                                 as seller_id,
-        seller_zip_code_prefix::varchar                                    as seller_zip_code_prefix,
-        trim(seller_city)::varchar                                         as seller_city,
-        trim(seller_state)::varchar                                        as seller_state
+        seller_id::varchar as seller_id,
+        seller_zip_code_prefix::varchar as seller_zip_code_prefix,
+        trim(seller_city)::varchar as seller_city,
+        trim(seller_state)::varchar as seller_state
 
     from source
 )

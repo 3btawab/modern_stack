@@ -1,1 +1,0 @@
-chore(dbt_my/dbt_project.yml): add dbt_project.yml to define project configuration and model settings

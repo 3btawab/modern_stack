@@ -1,1 +1,0 @@
-docs(dbt_my/README.md): add README with overview and usage notes for the dbt_my project

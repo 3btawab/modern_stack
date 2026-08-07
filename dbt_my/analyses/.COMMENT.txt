@@ -1,1 +1,0 @@
-chore(dbt_my/analyses): add analyses directory for ad-hoc SQL analyses and investigative queries

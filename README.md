@@ -15,7 +15,7 @@ Snowflake External Stage (TALABAT.RAW.TALABAT_STAGE)
         ▼  [Airflow DAG: talabat_batch — @daily]
 Task 1: reload_raw (PythonOperator)
   └─ snowflake.connector → COPY INTO 8 RAW tables
-        │
+        │ 
         ▼
 Task 2: dbt_build_core (BashOperator)
   └─ dbt build

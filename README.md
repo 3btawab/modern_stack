@@ -79,25 +79,7 @@ pipeline_modern_stack/
 
 ---
 
-## Prerequisites
-
-- **Docker & Docker Compose** installed
-- **Snowflake account** with `ACCOUNTADMIN` access
-- **Azure Blob Storage** container with the Olist CSV files uploaded
-- **dbt profile** configured (see below)
-
----
-
-## Setup
-
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/3btawab/modern_stack.git
-cd modern_stack
-```
-
-### 2. Snowflake Infrastructure (run in order)
+**Snowflake Infrastructure (run in order)**
 
 Execute these SQL scripts sequentially against your Snowflake account (using the Snowflake web UI or CLI):
 
@@ -144,8 +126,6 @@ cd airflow_ym
 docker compose build
 docker compose up -d
 ```
-
-Airflow UI is available at **http://localhost:8080** (username: `admin`, password: `admin`).
 
 The DAG (`talabat_batch`) will start running automatically on its `@daily` schedule. You can also trigger it manually from the UI.
 

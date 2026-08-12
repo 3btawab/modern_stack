@@ -6,28 +6,7 @@ A production-grade batch ETL pipeline that ingests the **Brazilian E-Commerce (O
 
 ## Architecture
 
-```
-Azure Blob Storage (CSV files)
-        │
-        ▼
-Snowflake External Stage (TALABAT.RAW.TALABAT_STAGE)
-        │
-        ▼  [Airflow DAG: talabat_batch — @daily]
-Task 1: reload_raw (PythonOperator)
-  └─ snowflake.connector → COPY INTO 8 RAW tables
-        │ 
-        ▼
-Task 2: dbt_build_core (BashOperator)
-  └─ dbt build
-     ├─ 8 staging views  (TALABAT.STAGING)
-     ├─ 5 marts tables   (TALABAT.MARTS)
-     ├─ Data quality tests (unique, not_null)
-     └─ SCD Type 2 snapshot on orders
-        │
-        ▼
-Analytics consumers query the MARTS schema
-  (seller_performance, product_category_analysis, order_revenue_by_month)
-```
+![Pipeline Architecture](architecture/stack_archticture.png)
 
 ---
 

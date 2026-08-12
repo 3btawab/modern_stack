@@ -1,6 +1,3 @@
-# Airflow 3.x (LocalExecutor) — apiserver, scheduler, dag-processor.
-#   docker compose build && docker compose up -d   # UI: http://localhost:8080 (admin/admin)
-
 x-airflow-common: &airflow-common
   build: .
   environment: &airflow-env

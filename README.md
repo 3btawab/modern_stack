@@ -18,7 +18,7 @@ Task 1: reload_raw (PythonOperator)
         │
         ▼
 Task 2: dbt_build_core (BashOperator)
-  └─ dbt build —exclude tag:ai
+  └─ dbt build
      ├─ 8 staging views  (TALABAT.STAGING)
      ├─ 5 marts tables   (TALABAT.MARTS)
      ├─ Data quality tests (unique, not_null)
@@ -38,10 +38,9 @@ pipeline_modern_stack/
 ├── airflow_ym/               # Airflow 3.x — Docker Compose stack
 │   ├── docker-compose.yml    # 4 services: postgres, apiserver, scheduler, dag-processor
 │   ├── dockerfile            # Custom image (Airflow 3.0.5, Snowflake provider, dbt venv)
-│   ├── .env                  # Snowflake & OpenAI credentials (gitignored)
+│   ├── .env                  # Snowflake credentials (gitignored)
 │   └── dags/
-│       ├── talabat_batch.py  # Main DAG — COPY INTO + dbt build
-│       └── hc.txt            # Reference DAG from prior project (future AI enrichment pattern)
+│       └── talabat_batch.py  # Main DAG — COPY INTO + dbt build
 │
 ├── dbd_ym/                   # dbt project & Snowflake infrastructure
 │   ├── dbt_my/               # dbt project (staging → marts → analyses)
@@ -79,7 +78,6 @@ pipeline_modern_stack/
 │       ├── 4_raw_tables.sql         # 8 RAW table DDLs
 │       └── 5_copy_into.sql          # Manual COPY INTO commands
 │
-├── ai/                       # AI enrichment (planned — not yet implemented)
 ├── logs/                     # Log output directory (gitignored)
 ├── .gitignore
 ├── LICENSE                   # MIT License
@@ -99,7 +97,6 @@ pipeline_modern_stack/
 | **PostgreSQL** | 16 | Airflow metadata database |
 | **Docker / Docker Compose** | — | Containerization |
 | **Python** | 3.12 | Airflow, dbt, custom operators |
-| **OpenAI** | — | Planned: AI review enrichment |
 
 ---
 
@@ -125,7 +122,7 @@ cd modern_stack
 
 Execute these SQL scripts sequentially against your Snowflake account (using the Snowflake web UI or CLI):
 
-1. **`dbd_ym/snowflake/1_setup.sql`** — Creates warehouse (`TALABAT_WH`), database (`TALABAT`), schemas (`BRONZE`, `RAW`, `STAGING`, `MARTS`, `SNAPSHOTS`, `AI`), and a `DBT_ROLE` with full privileges.
+1. **`dbd_ym/snowflake/1_setup.sql`** — Creates warehouse (`TALABAT_WH`), database (`TALABAT`), schemas (`RAW`, `STAGING`, `MARTS`, `SNAPSHOTS`), and a `DBT_ROLE` with full privileges.
 2. **`dbd_ym/snowflake/2_storage_integration.sql`** — Creates a storage integration to Azure Blob Storage (fill in your `AZURE_TENANT_ID` and `STORAGE_ALLOWED_LOCATIONS`).
 3. **`dbd_ym/snowflake/3_stage_and_formats.sql`** — Creates the CSV file format (`CSV_FMT`) and external stage (`TALABAT_STAGE`) pointing to your Azure Blob URL.
 4. **`dbd_ym/snowflake/4_raw_tables.sql`** — Creates the 8 raw tables in `TALABAT.RAW`.
@@ -139,8 +136,6 @@ Create `airflow_ym/.env`:
 SNOWFLAKE_ACCOUNT=your_account.region.cloud
 SNOWFLAKE_USER=3BTAWAB1
 SNOWFLAKE_PASSWORD=your_password
-OPENAI_API_KEY=sk-...
-SAMPLE_N=5
 ```
 
 ### 4. Configure dbt profile
@@ -200,7 +195,7 @@ Uses `snowflake.connector` to `COPY INTO` 8 raw tables from the Azure external s
 
 #### Task 2: `dbt_build_core` (BashOperator)
 
-Runs `dbt build --exclude tag:ai` which executes:
+Runs `dbt build` which executes:
 
 - **8 staging views** — Light transformation (type casting, trimming, lowercasing) on raw data
 - **5 marts tables** — Analytical model:
@@ -222,11 +217,9 @@ Runs `dbt build --exclude tag:ai` which executes:
 | Schema | Purpose | Objects |
 |---|---|---|
 | `RAW` | Landing zone — data as-is from source | 8 raw tables |
-| `STAGING` | Lightly transformed, typed data | 8 staging **views** |
-| `MARTS` | Business-ready dimensional model | 4 dims + 2 facts (**tables**) |
+| `STAGING` | Lightly transformed, typed data | 8 staging views |
+| `MARTS` | Business-ready dimensional model | 4 dims + 2 facts |
 | `SNAPSHOTS` | Slow-changing dimension history | `orders_snapshot` |
-| `AI` | Future: AI-enriched data | (reserved) |
-| `BRONZE` | Reserved for medallion architecture | (unused) |
 
 ### dbt Lineage
 
@@ -253,19 +246,8 @@ Three analytical queries are included under `dbd_my/analyses/` that can be compi
 
 ---
 
-## Roadmap
-
-- [ ] **AI Review Enrichment** — Use OpenAI to enrich product reviews (sentiment, key themes, etc.) and materialize into the `AI` schema
-- [ ] **dbt tests on marts** — Add `unique` / `not_null` tests on dimension and fact table keys
-- [ ] **CI/CD** — GitHub Actions to lint and test dbt models on PR
-- [ ] **Data docs** — Generate and host dbt docs site
-- [ ] **Monitoring** — Airflow alerting on DAG failures
-
----
-
 ## Notes
 
-- The `airflow_ym/dags/hc.txt` file is a **reference DAG** from a previous pipeline and is not active. It shows the planned pattern for the future AI enrichment step.
 - dbt runs from its own isolated virtual environment at `/opt/airflow/dbt_venv/bin/dbt` inside the Airflow container to avoid dependency conflicts.
 - The `.env` files are gitignored — never commit credentials.
 
